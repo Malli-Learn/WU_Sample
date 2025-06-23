@@ -1,78 +1,105 @@
+import { useRouter } from 'expo-router';
 import { ChevronDown } from 'lucide-react-native';
 import React from 'react';
-import { Button, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Button, Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+const { height } = Dimensions.get('window');
 
 export default function HomeTab() {
+  const router = useRouter();
+
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#FFD700' }}>
-      {/* Header */}
-      <View style={styles.headerContainer}>
-        <Image source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/5/5a/Western_Union_logo.svg' }} style={styles.logo} />
-        <TouchableOpacity style={styles.loginButton}>
-          <Text style={{ color: 'black', fontWeight: 'bold' }}>Login/Register</Text>
-        </TouchableOpacity>
+    <SafeAreaView style={{ flex: 1 }}>
+      {/* Split background */}
+      <View style={styles.backgroundContainer}>
+        <View style={styles.topBackground} />
+        <View style={styles.bottomBackground} />
       </View>
-
-      {/* Greeting */}
-      <Text style={styles.greetingText}>Hello there.</Text>
-
-      {/* Money Transfer Card */}
-      <View style={styles.transferCard}>
-        <View style={styles.transferHeader}>
-          <Image source={{ uri: 'https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg' }} style={styles.flag} />
-          <Text style={styles.transferText}>Send money to </Text>
-          <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={styles.countryText}>United Kingdom</Text>
-            <ChevronDown size={20} color="#000" />
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 24 }}>
+        {/* Header */}
+        <View style={styles.headerContainer}>
+          <Image source={require('../../assets/images/wu_logo.png')} style={styles.logo} />
+          <TouchableOpacity style={styles.loginButton} >
+            <Text style={{ color: 'yellow'}}>Login/Register</Text>
           </TouchableOpacity>
         </View>
 
-        <View style={styles.inputRow}>
-          <Text style={styles.label}>You're sending</Text>
-          <Text style={styles.currency}>INR</Text>
-        </View>
-        <TextInput
-          placeholder="0.00"
-          style={styles.textInput}
-          keyboardType="numeric"
-        />
+        {/* Greeting */}
+        <Text style={styles.greetingText}>Hello there.</Text>
 
-        <View style={styles.inputRow}>
-          <Text style={styles.label}>Your receiver gets</Text>
-          <Text style={styles.currency}>GBP</Text>
-        </View>
-        <TextInput
-          placeholder="0.00"
-          style={styles.textInput}
-          keyboardType="numeric"
-        />
+        {/* Money Transfer Card */}
+        <View style={styles.transferCard}>
+          <View style={styles.transferHeader}>
+            <Image source={require('../../assets/images/gbp_icon.png')} style={styles.flag} />
+            <Text style={styles.transferText}>Send money to </Text>
+            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={styles.countryText}>United Kingdom</Text>
+              <ChevronDown size={20} color="#000" />
+            </TouchableOpacity>
+          </View>
 
-        <Button
-          title="Send money"
-          color="#FFD700"
-          onPress={() => {}}
-        />
-      </View>
-
-      {/* Special Offers */}
-      <Text style={styles.offersText}>Special Offers for you</Text>
-      <View style={styles.offerCard}>
-        <View style={styles.offerContent}>
-          <Text style={styles.offerText}>
-            Send money abroad for zero transfer fee* online.
-          </Text>
-          <Button
-            title="Get Started"
-            color="#FFD700"
-            onPress={() => {}}
+          <View style={styles.inputRow}>
+            <Text style={styles.label}>You're sending</Text>
+            <Text style={styles.currency}>INR</Text>
+          </View>
+          <TextInput
+            placeholder="0.00"
+            style={styles.textInput}
+            keyboardType="numeric"
           />
+
+          <View style={styles.inputRow}>
+            <Text style={styles.label}>Your receiver gets</Text>
+            <Text style={styles.currency}>GBP</Text>
+          </View>
+          <TextInput
+            placeholder="0.00"
+            style={styles.textInput}
+            keyboardType="numeric"
+          />
+
+          <TouchableOpacity
+            style={styles.sendButton}
+            onPress={() => router.push('/review')}
+          >
+            <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'black' }}>Send money</Text>
+          </TouchableOpacity>
         </View>
-      </View>
-    </ScrollView>
+
+        {/* Special Offers */}
+        <Text style={styles.offersText}>Special Offers for you</Text>
+        <View style={styles.offerCard}>
+          <View style={styles.offerContent}>
+            <Text style={styles.offerText}>
+              Send money abroad for zero transfer fee* online.
+            </Text>
+            <Button
+              title="Get Started"
+              color="#FFD700"
+              onPress={() => {}}
+            />
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundContainer: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: -1,
+    flex: 1,
+  },
+  topBackground: {
+    height: height * 0.4,
+    backgroundColor: '#ffdd00',
+  },
+  bottomBackground: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -80,26 +107,33 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   logo: {
-    width: 40,
-    height: 40,
+    width: 48,
+    height: 48,
     resizeMode: 'contain',
   },
   loginButton: {
+    height: 30,
     backgroundColor: 'black',
     borderRadius: 20,
     paddingHorizontal: 12,
+    justifyContent: 'center',      
+    alignItems: 'center',  
   },
   greetingText: {
-    fontSize: 28,
-    fontWeight: 'bold',
+    fontSize: 24,
     marginHorizontal: 16,
     marginBottom: 16,
   },
   transferCard: {
-    margin: 16,
     padding: 16,
+    marginHorizontal: 16,
     borderRadius: 12,
     backgroundColor: '#fff',
+    elevation: 5, // Android shadow
+    shadowColor: '#000', // iOS shadow
+    shadowOffset: { width: 0, height: 2 }, // iOS shadow
+    shadowOpacity: 0.15, // iOS shadow
+    shadowRadius: 8, // iOS shadow
   },
   transferHeader: {
     flexDirection: 'row',
@@ -121,6 +155,7 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   inputRow: {
+    height: 40,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -132,14 +167,19 @@ const styles = StyleSheet.create({
   },
   currency: {
     fontSize: 16,
-    fontWeight: 'bold',
   },
   textInput: {
     marginBottom: 12,
+    fontSize: 24,
   },
   sendButton: {
     backgroundColor: '#FFD700',
     borderRadius: 30,
+    height: 50,
+    marginHorizontal: 8,
+    fontWeight: 'bold',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 16,
   },
   offersText: {
@@ -150,10 +190,18 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   offerCard: {
+    height: 100,
     marginHorizontal: 16,
     padding: 16,
     borderRadius: 12,
     backgroundColor: '#fff',
+    borderWidth: 1,                
+    borderColor: '#E5E5E7',        
+    elevation: 4,                 
+    shadowColor: '#000',           
+    shadowOffset: { width: 0, height: 2 }, 
+    shadowOpacity: 0.12,           
+    shadowRadius: 6, 
   },
   offerContent: {
     flexDirection: 'row',
