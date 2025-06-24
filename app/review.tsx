@@ -16,6 +16,7 @@ export default function ReviewScreen() {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff', padding: 24 },
   backButton: { marginBottom: 24 },

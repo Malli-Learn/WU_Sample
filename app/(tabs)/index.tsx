@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { ChevronDown } from 'lucide-react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -8,6 +8,29 @@ const { height } = Dimensions.get('window');
 
 export default function HomeTab() {
   const router = useRouter();
+
+  const [amountUSD, setAmountUSD] = useState('');
+  const [rate, setRate] = useState(null);
+  const [convertedINR, setConvertedINR] = useState('');
+
+  useEffect(() => {
+    if (!amountUSD || isNaN(Number(amountUSD))) {
+      setConvertedINR('');
+      return;
+    }
+
+    fetch('http://localhost:8080/exchange-rate?from=USD&to=INR')
+      .then((res) => res.json())
+      .then((rateValue) => {
+        setRate(rateValue);
+        const converted = (parseFloat(amountUSD) * rateValue).toFixed(2);
+        setConvertedINR(converted);
+      })
+      .catch((err) => {
+        console.error('Error fetching rate:', err);
+        setConvertedINR('');
+      });
+  }, [amountUSD]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -20,8 +43,8 @@ export default function HomeTab() {
         {/* Header */}
         <View style={styles.headerContainer}>
           <Image source={require('../../assets/images/wu_logo.png')} style={styles.logo} />
-          <TouchableOpacity style={styles.loginButton} >
-            <Text style={{ color: 'yellow'}}>Login/Register</Text>
+          <TouchableOpacity style={styles.loginButton}>
+            <Text style={{ color: 'yellow' }}>Login/Register</Text>
           </TouchableOpacity>
         </View>
 
@@ -47,7 +70,27 @@ export default function HomeTab() {
             placeholder="0.00"
             style={styles.textInput}
             keyboardType="numeric"
+            value={amountUSD}
+            onChangeText={setAmountUSD}
           />
+
+          {/* Conditional FX and Delivery text with bullets */}
+          {amountUSD && !isNaN(Number(amountUSD)) && rate && (
+            <View style={{ marginVertical: 8 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+                <Text style={{ fontSize: 36, color: '#333' }}>• </Text>
+                <Text style={{ fontSize: 14, color: '#333' }}>FX 1 USD = {rate} INR</Text>
+              </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={{ fontSize: 36, color: '#333' }}>•</Text>
+                <Image
+                  source={require('../../assets/images/bank_icon.png')}
+                  style={{ width: 16, height: 16, marginHorizontal: 6 }}
+                />
+                <Text style={{ fontSize: 14, color: '#333' }}>Deliver to Bank Account</Text>
+              </View>
+            </View>
+          )}
 
           <View style={styles.inputRow}>
             <Text style={styles.label}>Your receiver gets</Text>
@@ -57,6 +100,8 @@ export default function HomeTab() {
             placeholder="0.00"
             style={styles.textInput}
             keyboardType="numeric"
+            value={convertedINR}
+            editable={false}
           />
 
           <TouchableOpacity
@@ -74,17 +119,14 @@ export default function HomeTab() {
             <Text style={styles.offerText}>
               Send money abroad for zero transfer fee* online.
             </Text>
-            <Button
-              title="Get Started"
-              color="#FFD700"
-              onPress={() => {}}
-            />
+            <Button title="Get Started" color="#FFD700" onPress={() => {}} />
           </View>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
+
 
 const styles = StyleSheet.create({
   backgroundContainer: {
@@ -150,8 +192,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   countryText: {
-    fontSize: 16,
-    color: 'blue',
+    fontSize: 24,
+    color: '#007acc',
     marginLeft: 4,
   },
   inputRow: {
@@ -169,6 +211,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   textInput: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
     marginBottom: 12,
     fontSize: 24,
   },
