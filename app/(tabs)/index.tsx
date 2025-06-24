@@ -31,17 +31,17 @@ export default function HomeTab() {
         {/* Money Transfer Card */}
         <View style={styles.transferCard}>
           <View style={styles.transferHeader}>
-            <Image source={require('../../assets/images/gbp_icon.png')} style={styles.flag} />
+            <Image source={require('../../assets/images/india_flag.png')} style={styles.flag} />
             <Text style={styles.transferText}>Send money to </Text>
             <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={styles.countryText}>United Kingdom</Text>
+              <Text style={styles.countryText}>India</Text>
               <ChevronDown size={20} color="#000" />
             </TouchableOpacity>
           </View>
 
           <View style={styles.inputRow}>
             <Text style={styles.label}>You're sending</Text>
-            <Text style={styles.currency}>INR</Text>
+            <Text style={styles.currency}>USD</Text>
           </View>
           <TextInput
             placeholder="0.00"
@@ -51,7 +51,7 @@ export default function HomeTab() {
 
           <View style={styles.inputRow}>
             <Text style={styles.label}>Your receiver gets</Text>
-            <Text style={styles.currency}>GBP</Text>
+            <Text style={styles.currency}>INR</Text>
           </View>
           <TextInput
             placeholder="0.00"
